@@ -167,6 +167,35 @@ class MainWindow(QMainWindow):
         self.panel.stop_requested.connect(self.on_stop)
         self.gallery.tile_clicked.connect(self.open_viewer)
 
+    # ------------------------------------------------------------------ 线程工具
+    def _cleanup_worker(self, worker) -> None:
+        """安全停掉并清理一个后台 QThread，防止其在运行时被 GC 导致进程崩溃。
+
+        所有 QThread 子线程都必须保留引用。一旦 Python 把它回收掉而线程还在跑，
+        Qt 会直接中止整个进程（表现为"黑框一闪就闪退"）。
+        """
+        if worker is None:
+            return
+        # 1) 断开所有信号：避免 stop 后还有滞后信号进入主线程
+        for sig_name in ("progress", "failed", "finished_with",
+                         "saved", "loaded", "started"):
+            sig = getattr(worker, sig_name, None)
+            if sig is None:
+                continue
+            try:
+                sig.disconnect()
+            except (RuntimeError, TypeError):
+                pass
+        # 2) 主动请求停止（poller 这类长循环线程有 stop()）
+        if hasattr(worker, "stop"):
+            try:
+                worker.stop()
+            except Exception:  # noqa: BLE001
+                pass
+        # 3) 等待线程真正退出再丢弃引用
+        if worker.isRunning():
+            worker.wait(2000)
+
     # ------------------------------------------------------------------ 健康检查
     def refresh_health(self) -> None:
         if self._health_worker and self._health_worker.isRunning():
@@ -223,6 +252,7 @@ class MainWindow(QMainWindow):
     # ------------------------------------------------------------------ 文件夹
     def on_folder_selected(self, folder: str) -> None:
         self.panel.set_image_count(0)
+        self._cleanup_worker(self._scan_worker)
         worker = ScanWorker(folder)
         worker.finished_with.connect(self.on_scan_done)
         worker.failed.connect(lambda msg: self.panel.set_scan_error(msg))
@@ -244,6 +274,11 @@ class MainWindow(QMainWindow):
         self._set_status("正在创建任务…")
         self.setCursor(Qt.BusyCursor)
 
+        # 启动新任务前先把旧的后台线程安全停掉，避免旧任务进度继续污染 UI
+        self._cleanup_worker(self._poller)
+        self._cleanup_worker(self._starter)
+        self._current_job = None
+
         starter = JobStarter(folder, prompt)
         starter.started.connect(self.on_job_created)
         starter.failed.connect(self.on_job_failed)
@@ -256,6 +291,7 @@ class MainWindow(QMainWindow):
             self.on_job_failed("后端未返回任务 ID")
             return
 
+        self._cleanup_worker(self._starter)
         self._current_job = job_id
         self._set_status("任务已创建，等待模型响应…")
 
@@ -266,6 +302,11 @@ class MainWindow(QMainWindow):
         poller.start()
 
     def on_progress(self, info: dict) -> None:
+        # 防御性：忽略旧任务滞后到达的进度信号
+        info_job_id = info.get("job_id")
+        if info_job_id and self._current_job and info_job_id != self._current_job:
+            return
+
         status = info.get("status")
         self.panel.update_summary(info)
 
@@ -358,6 +399,7 @@ class MainWindow(QMainWindow):
 
     # ------------------------------------------------------------------ 参数设置
     def load_config(self) -> None:
+        self._cleanup_worker(self._config_worker)
         worker = ConfigWorker()
         worker.loaded.connect(self.on_config_loaded)
         worker.failed.connect(lambda msg: None)
@@ -373,6 +415,7 @@ class MainWindow(QMainWindow):
             return
 
         patch = dialog.patch()
+        self._cleanup_worker(self._config_worker)
         worker = ConfigWorker(patch)
         worker.saved.connect(self.on_config_saved)
         worker.failed.connect(lambda msg: self._set_status(msg, error=True))
