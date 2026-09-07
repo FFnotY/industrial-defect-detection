@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+.codebuddy/
+*.swp
+
+# 运行时生成
+config.json
+logs/
+backend/storage/
+
+# 系统文件
+.DS_Store
+Thumbs.db

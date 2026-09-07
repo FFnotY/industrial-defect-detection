@@ -1,0 +1,259 @@
+/* 工业缺陷检测系统 —— 白色浅色主题 */
+
+QWidget {
+    color: #1F2937;
+    font-family: "Source Han Sans SC", "Noto Sans CJK SC", "思源黑体", "Microsoft YaHei UI";
+    font-size: 13px;
+}
+
+QMainWindow, QDialog {
+    background: #F4F6F9;
+}
+
+/* ---------- 通用容器 ---------- */
+QFrame#toolbar {
+    background: #FFFFFF;
+    border: none;
+    border-bottom: 1px solid #E6EAF0;
+}
+
+QFrame#panel {
+    background: #F4F6F9;
+}
+
+QFrame#card {
+    background: #FFFFFF;
+    border: 1px solid #E6EAF0;
+    border-radius: 12px;
+}
+
+QFrame#statusbar {
+    background: #FFFFFF;
+    border-top: 1px solid #E6EAF0;
+}
+
+/* ---------- 文字 ---------- */
+QLabel#title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111827;
+    letter-spacing: 1px;
+}
+
+QLabel#version {
+    color: #9CA3AF;
+    font-size: 11px;
+}
+
+QLabel#cardTitle {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6B7280;
+    letter-spacing: 1px;
+}
+
+QLabel#hint {
+    color: #9CA3AF;
+    font-size: 11px;
+}
+
+QLabel#value {
+    color: #111827;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+QLabel#valueSuccess { color: #10B981; font-size: 16px; font-weight: 600; }
+QLabel#valueFail    { color: #EF4444; font-size: 16px; font-weight: 600; }
+
+QLabel#statusText {
+    color: #6B7280;
+    font-size: 12px;
+}
+
+QLabel#statusLight {
+    border-radius: 5px;
+    min-width: 10px;
+    max-width: 10px;
+    min-height: 10px;
+    max-height: 10px;
+    background: #C4CBD4;
+    border: 1px solid #D8DEE6;
+}
+
+QLabel#statusLight[state="ready"]   { background: #10B981; border: 1px solid #10B981; }
+QLabel#statusLight[state="loading"] { background: #F59E0B; border: 1px solid #F59E0B; }
+QLabel#statusLight[state="error"]   { background: #EF4444; border: 1px solid #EF4444; }
+QLabel#statusLight[state="off"]     { background: #C4CBD4; border: 1px solid #D8DEE6; }
+
+QLabel#errorText { color: #EF4444; font-size: 12px; }
+QLabel#successText { color: #10B981; font-size: 12px; }
+
+/* ---------- 输入 ---------- */
+QLineEdit {
+    background: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: #1F2937;
+    selection-background-color: #2563EB;
+    selection-color: #FFFFFF;
+}
+
+QLineEdit:focus {
+    border: 1px solid #2563EB;
+}
+
+QLineEdit:read-only {
+    color: #6B7280;
+    background: #F1F3F6;
+}
+
+QLineEdit::placeholder { color: #9CA3AF; }
+
+QSpinBox {
+    background: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    padding: 6px 8px;
+    color: #1F2937;
+}
+
+QSpinBox:focus { border: 1px solid #2563EB; }
+
+/* ---------- 按钮 ---------- */
+QPushButton {
+    background: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #1F2937;
+}
+
+QPushButton:hover {
+    background: #F8FAFC;
+    border: 1px solid #2563EB;
+    color: #2563EB;
+}
+
+QPushButton:pressed {
+    background: #EFF4FF;
+}
+
+QPushButton:disabled {
+    background: #F1F3F6;
+    color: #B6BEC9;
+    border: 1px solid #E6EAF0;
+}
+
+QPushButton#primary {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #3B82F6, stop:1 #2563EB);
+    border: none;
+    color: #FFFFFF;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 9px;
+}
+
+QPushButton#primary:hover {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #2F72EE, stop:1 #1D4ED8);
+}
+
+QPushButton#primary:pressed {
+    background: #1D4ED8;
+}
+
+QPushButton#ghost {
+    background: #FFFFFF;
+    border: 1px solid #D1D5DB;
+    color: #4B5563;
+    padding: 6px 10px;
+}
+
+QPushButton#ghost:hover {
+    background: #F8FAFC;
+    border: 1px solid #2563EB;
+    color: #2563EB;
+}
+
+/* ---------- 进度条 ---------- */
+QProgressBar {
+    background: #E9EDF2;
+    border: none;
+    border-radius: 4px;
+    height: 6px;
+    text-align: center;
+}
+
+QProgressBar::chunk {
+    border-radius: 4px;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #3B82F6, stop:1 #22D3A6);
+}
+
+/* ---------- 滚动区 ---------- */
+QScrollArea {
+    background: transparent;
+    border: none;
+}
+
+QScrollBar:vertical {
+    background: transparent;
+    width: 10px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #D1D8E0;
+    border-radius: 5px;
+    min-height: 40px;
+}
+
+QScrollBar::handle:vertical:hover { background: #B6C2CE; }
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
+
+QScrollBar:horizontal { height: 0px; }
+
+/* ---------- 图片卡片 ---------- */
+QFrame#tile {
+    background: #FFFFFF;
+    border: 1px solid #E6EAF0;
+    border-radius: 10px;
+}
+
+QFrame#tile:hover {
+    border: 1px solid #2563EB;
+    background: #F8FAFC;
+}
+
+QLabel#tileName {
+    color: #6B7280;
+    font-size: 11px;
+    padding: 0 4px;
+}
+
+/* ---------- 分组框 ---------- */
+QGroupBox {
+    border: 1px solid #E6EAF0;
+    border-radius: 10px;
+    margin-top: 14px;
+    padding: 10px;
+    color: #6B7280;
+    font-size: 12px;
+    background: #FFFFFF;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 12px;
+    padding: 0 6px;
+    color: #6B7280;
+}
+
+/* ---------- 提示气泡 ---------- */
+QToolTip {
+    background: #111827;
+    color: #F9FAFB;
+    border: 1px solid #374151;
+    padding: 4px 8px;
+}

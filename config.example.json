@@ -1,0 +1,7 @@
+{
+  "batch_size": 8,
+  "max_side": 0,
+  "jpeg_quality": 90,
+  "host": "127.0.0.1",
+  "port": 8765
+}
